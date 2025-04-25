@@ -67,9 +67,8 @@ def main_quality_check(errors):
     return gate.get_status()
 
 if __name__ == "__main__":
-    # Set a dummy API token
+    # Set a dummy API token -- this is for demonstration only, normally you would not hardcode a token here!
     os.environ['REPORTING_API_TOKEN'] = 'fake_token_for_testing'
-
 
     print("\nRunning quality checks against the local mock server (make sure it's running separately):")
     result1 = main_quality_check(15)
