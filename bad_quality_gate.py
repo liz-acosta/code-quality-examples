@@ -1,31 +1,43 @@
 import requests
 import os
 
+# Definition of the QualityGateCheck class.
 class QualityGateCheck:
+     # Constructor for the QualityGateCheck class. It initializes the error and warning thresholds, the initial status, and the check type.
     def __init__(self, error_threshold, warning_threshold):
+        # Store the error threshold provided during initialization. This threshold determines when the check fails.
         self.error_threshold = error_threshold
+         # Store the warning threshold provided during initialization. This threshold determines when the check passes with errors.
         self.warning_threshold = warning_threshold
+        # Initialize the status of the quality gate to 'Pending'. This will be updated after the check is run.
         self.status = "Pending" 
+        # Define the type of check this instance performs.
         self.check_type = "Combined Threshold Check" 
 
+    # Function to process the 'code_errors' against the defined thresholds.
     def run_check(self, code_errors):
         self.status = "Pending"
+         # Check if the number of 'code_errors' is greater than or equal to the 'error_threshold'. If it is, return a 'failed' status message.
         if code_errors >= self.error_threshold:
             self.status = "Failed: Exceeds error threshold"
             result = self.status
             return result
+        # Otherwise, check if the number of 'code_errors' is greater than the 'warning_threshold'. If it is, return a 'passed with errors' status message.
         elif code_errors > self.warning_threshold:
             self.status = "Passed with errors"
             output = self.status
             return output
+        # If neither of the above conditions is met, it means the number of errors is within the acceptable range, so return a 'passed' status message.
         else:
             self.status = "Passed"
             final_status = self.status
             return final_status
         return final_status
 
+     # Method to retrieve the current status of the quality gate.
     def get_status(self):
         current_status = self.status 
+        # Return the current status. This could be 'Pending', 'Passed', 'Passed with errors', or 'Failed: Exceeds error threshold'.
         return current_status
 
     def describe_check(self): 

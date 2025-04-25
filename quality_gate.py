@@ -17,6 +17,15 @@ class QualityGateCheck:
     def describe_check(self):
         """Returns a description of the check."""
         return f"Checking for errors above {self.error_threshold} and warnings above {self.warning_threshold}."
+    
+    def process_code_errors(self, code_errors):
+        """Processes errors against thresholds."""
+        if code_errors >= self.error_threshold:
+            return "Check failed: Exceeds error threshold"
+        elif code_errors > self.warning_threshold:
+            return "Check passed with errors"
+        else:
+            return "Check passed"
 
 def validate_code_errors(code_errors):
     """Validates the input for code errors."""
@@ -25,15 +34,6 @@ def validate_code_errors(code_errors):
     if not isinstance(code_errors, int):
         return "Invalid code errors: Expected an integer."
     return None  # Input is valid
-
-def process_code_errors(code_errors, error_threshold, warning_threshold):
-    """Processes errors against thresholds."""
-    if code_errors >= error_threshold:
-        return "Check failed: Exceeds error threshold"
-    elif code_errors > warning_threshold:
-        return "Check passed with errors"
-    else:
-        return "Check passed"
 
 def report_quality_gate_status(gate_status, check_type):
     """Reports the status to an external service."""
@@ -60,7 +60,7 @@ def main_quality_check(errors):
     if validation_result:
         return validation_result
 
-    final_status = process_code_errors(errors, gate.error_threshold, gate.warning_threshold)
+    final_status = gate.process_code_errors(errors)
     gate.status = final_status
 
     report_quality_gate_status(gate.get_status(), gate.check_type)
