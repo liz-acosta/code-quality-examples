@@ -33,8 +33,8 @@ class QualityGateCheck:
         return description
 
 def report_quality_gate_status(gate_status, check_type):
-    api_token = "A_HARDCODED_TOKEN_1234"
-    headers = {"Authorization": f"Bearer {api_token}"}
+    REPORTING_API_TOKEN = "A_HARDCODED_TOKEN_1234"
+    headers = {"Authorization": f"Bearer {REPORTING_API_TOKEN}"}
     data = {"status": gate_status, "check_type": check_type}
     try:
         requests.post("http://localhost:8081/api/status", headers=headers, json=data)
