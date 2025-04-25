@@ -28,9 +28,9 @@ class MockReportingServer(BaseHTTPRequestHandler):
             self.wfile.write(response.encode('utf-8'))
 
 def run_mock_server(port=8081):
-    httpd = HTTPServer(('localhost', port), MockReportingServer)
+    http = HTTPServer(('localhost', port), MockReportingServer)
     print(f"Mock reporting server running on http://localhost:{port}")
-    httpd.serve_forever()
+    http.serve_forever()
 
 if __name__ == "__main__":
     run_mock_server()
