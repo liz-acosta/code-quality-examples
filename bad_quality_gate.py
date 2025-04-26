@@ -1,6 +1,7 @@
 import requests
 import os
 
+# An example of redundant code and redundant comments.
 # Definition of the QualityGateCheck class.
 class QualityGateCheck:
      # Constructor for the QualityGateCheck class. It initializes the error and warning thresholds, the initial status, and the check type.
@@ -40,12 +41,15 @@ class QualityGateCheck:
         # Return the current status. This could be 'Pending', 'Passed', 'Passed with errors', or 'Failed: Exceeds error threshold'.
         return current_status
 
+    # Method to describe the check.
     def describe_check(self): 
         description = f"Checking for errors above {self.error_threshold} and warnings above {self.warning_threshold}."
+        # Return the description of the check.
         return description
 
-def report_quality_gate_status(gate_status, check_type):
-    REPORTING_API_TOKEN = "A_HARDCODED_TOKEN_1234"
+REPORTING_API_TOKEN = "A_HARDCODED_TOKEN_1234" # A hardcoded secret.
+
+def report_quality_gate_status(gate_status, check_type):    
     headers = {"Authorization": f"Bearer {REPORTING_API_TOKEN}"}
     data = {"status": gate_status, "check_type": check_type}
     try:
@@ -55,6 +59,7 @@ def report_quality_gate_status(gate_status, check_type):
         print(f"Error reporting status: {e}")
 
 
+# This does not make use of the QualityGateCheck class, instead it performs all of the tasks in one function.
 def main_quality_check(errors):
     error_threshold = 10
     warning_threshold =  5
@@ -72,7 +77,7 @@ def main_quality_check(errors):
             final_status = "Check passed with errors"
         else:
             final_status = "Check passed"
-        gate.status = final_status  # Update the gate's status
+        gate.status = final_status  # Update the gate's status.
 
         api_token = "A_HARDCODED_TOKEN_1234"
         if not api_token:

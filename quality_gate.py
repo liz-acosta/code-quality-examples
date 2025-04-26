@@ -37,7 +37,7 @@ def validate_code_errors(code_errors):
 
 def report_quality_gate_status(gate_status, check_type):
     """Reports the status to an external service."""
-    api_token = os.environ.get("REPORTING_API_TOKEN")  # API token for reporting.
+    api_token = os.environ.get("REPORTING_API_TOKEN")  # API token for reporting retrieved from environment.
     if not api_token:
         print("Warning: REPORTING_API_TOKEN environment variable not set (reporting skipped).")
         return
