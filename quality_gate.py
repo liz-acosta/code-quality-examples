@@ -1,11 +1,16 @@
 import requests
 import os
+from tabulate import tabulate
+
 
 class QualityGateCheck:
     """Performs a quality check based on error and warning thresholds."""
+
     def __init__(self, error_threshold, warning_threshold):
         """Initializes the check with thresholds."""
-        self.error_threshold = error_threshold  # The number of errors at or above which the check fails.
+        self.error_threshold = (
+            error_threshold  # The number of errors at or above which the check fails.
+        )
         self.warning_threshold = warning_threshold  # The number of errors above which the check passes with warnings.
         self.status = "Pending"
         self.check_type = "Code Error Threshold Check"
@@ -17,7 +22,7 @@ class QualityGateCheck:
     def describe_check(self):
         """Returns a description of the check."""
         return f"Checking for errors above {self.error_threshold} and warnings above {self.warning_threshold}."
-    
+
     def process_code_errors(self, code_errors):
         """Processes errors against thresholds."""
         if code_errors >= self.error_threshold:
@@ -27,6 +32,7 @@ class QualityGateCheck:
         else:
             return "Check passed"
 
+
 def validate_code_errors(code_errors):
     """Validates the input for code errors."""
     if not code_errors:
@@ -35,20 +41,34 @@ def validate_code_errors(code_errors):
         return "Invalid code errors: Expected an integer."
     return None  # Input is valid
 
-def report_quality_gate_status(gate_status, check_type):
+
+def report_quality_gate_status(gate_status, check_type, check_description):
     """Reports the status to an external service."""
-    api_token = os.environ.get("REPORTING_API_TOKEN")  # API token for reporting retrieved from environment.
+    api_token = os.environ.get(
+        "REPORTING_API_TOKEN"
+    )  # API token for reporting retrieved from environment.
     if not api_token:
-        print("Warning: REPORTING_API_TOKEN environment variable not set (reporting skipped).")
+        print(
+            "Warning: REPORTING_API_TOKEN environment variable not set (reporting skipped)."
+        )
         return
     headers = {"Authorization": f"Bearer {api_token}"}
-    data = {"status": gate_status, "check_type": check_type}
+    data = {
+        "status": gate_status,
+        "check_type": check_type,
+        "check_description": check_description,
+    }
     try:
-        response = requests.post("http://localhost:8081/api/status", headers=headers, json=data)
+        response = requests.post(
+            "http://localhost:8081/api/status", headers=headers, json=data
+        )
         response.raise_for_status()  # Ensure successful request.
-        print(f"Status '{gate_status}' for '{check_type}' reported successfully.")
+        final_ouput = [response.json()["message"], tabulate(response.json()["data"])]
+        for output in final_ouput:
+            print(output)
     except requests.exceptions.RequestException as e:
         print(f"Error reporting status: {e}")
+
 
 def main_quality_check(errors):
     """Orchestrates the quality check process."""
@@ -63,19 +83,20 @@ def main_quality_check(errors):
     final_status = gate.process_code_errors(errors)
     gate.status = final_status
 
-    report_quality_gate_status(gate.get_status(), gate.check_type)
+    report_quality_gate_status(
+        gate.get_status(), gate.check_type, gate.describe_check()
+    )
     return gate.get_status()
 
+
 if __name__ == "__main__":
-    # Set a dummy API token -- this is for demonstration only, normally you would not hardcode a token here!
-    os.environ['REPORTING_API_TOKEN'] = 'fake_token_for_testing'
 
-    print("\nRunning quality checks against the local mock server (make sure it's running separately):")
-    result1 = main_quality_check(15)
-    print(f"Main Check Result (15 errors): {result1}")
+    print(
+        "\nRunning quality checks against the local mock server (make sure it's running separately):"
+    )
 
-    result2 = main_quality_check(3)
-    print(f"Main Check Result (3 errors): {result2}")
+    code_errors = [15, 3, None, "five"]
 
-    result3 = main_quality_check(None)
-    print(f"Main Check Result (No errors): {result3}")
+    for code_error in code_errors:
+        result = main_quality_check(code_error)
+        print(f"Main check result with code errors {code_error}: {result}")
