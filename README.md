@@ -2,7 +2,7 @@
 
 This repo aims to provide examples of what good code looks like vs. bad code. While both scripts contained in this repo _will_ run, one script is easier to understand and therefore easier to maintain and debug. One way to see this demonstrated is to try writing unit tests for them.
 
-# This repo contains
+# What this repo contains
 This repo contains everything needed to run the scripts. The primary files of concern are:
 ```
 code-quality-examples
