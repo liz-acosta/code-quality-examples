@@ -45,3 +45,6 @@ Status              Check failed: Exceeds error threshold
 ------------------  --------------------------------------------------
 Main check result with code errors 15: Check failed: Exceeds error threshold
 ```
+
+## Resources
+* [Code That Won’t Cost You: Coding best practices for any language to increase code quality and reduce developer toil](https://utm.guru/uinNe)
